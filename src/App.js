@@ -1,30 +1,24 @@
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import {
-	decrement,
-	increaseAmount,
-	increment,
-	reset,
-} from './redux/slices/counterSlices';
+import { fetchPosts } from './redux/slices/postsSlice';
 
 function App() {
-	const counter = useSelector((state) => state?.counter);
+	const posts = useSelector((state) => state?.posts);
 	const dispatch = useDispatch();
-
-	const increaseCounter = (e) => {
-		dispatch(increment());
-	};
+	console.log(posts);
+	useEffect(() => {
+		dispatch(fetchPosts());
+	}, [dispatch]);
 
 	return (
 		<div className="App">
-			<h1>Redux toolkit counter</h1>
-			<h2>Counter : {counter.value}</h2>
-			<button onClick={increaseCounter}>+</button>
-			<button onClick={() => dispatch(decrement())}>-</button>
-			<button onClick={() => dispatch(increaseAmount(20))}>
-				Increase Amount
-			</button>
-			<button onClick={() => dispatch(reset())}>Reset Amount</button>
+			<h1>Posts</h1>
+			{posts.loading ? (
+				<h1>Loading...</h1>
+			) : (
+				posts.postList.map((post) => <div key={`${post.id}`}>{post.title}</div>)
+			)}
 		</div>
 	);
 }
